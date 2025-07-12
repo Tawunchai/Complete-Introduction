@@ -18,6 +18,6 @@ type User struct {
 	GenderID uint
 	Gender *Gender `gorm:"foreignKey: GenderID"`
 
-	Review []Review `gorm:"many2many:user_reviews"`
+	Review []Review `gorm:"foreignKey: UserID"`
 
 }

@@ -59,7 +59,7 @@ func SetupDatabase() {
 		FirstName: "Tawunchai",
 		LastName: "Burakhon",
 		PhoneNumber: "0935096372",
-		Profile: "",
+		Profile: "base64",
 		UserRoleID: uint(2),
 		GenderID: uint(1),
 	}
@@ -67,10 +67,9 @@ func SetupDatabase() {
 	db.FirstOrCreate(&User,entity.User{Username: "Tawun"})
 
 	Review := entity.Review{
-		ReviewDate: time.Now(),
+		Date: time.Now(),
 		Rating: 5,
 		Comment: "review is good",
-		Picture: "",
 	}
 
 	db.FirstOrCreate(&Review,entity.Review{Rating: 5})

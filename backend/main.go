@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Tawunchai/learn-golang/config"
+	"github.com/Tawunchai/learn-golang/controller"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,10 +18,17 @@ func main() {
 
 	r := gin.Default()
 
-	/*router := r.Group("")
+	r.Use(CORSMiddleware())
+
+	router := r.Group("")
 	{
-		
-	}*/
+		router.GET("/reviews", controller.ListReviews)
+		router.GET("/reviews-by-user/:user_id", controller.GetReviewByUserID)
+		router.POST("/create-reviews", controller.CreateReview)
+		router.PUT("/update-put-reviews/:id", controller.UpdateReviewByIDForPUT)
+		router.PATCH("/update-patch-reviews/:id", controller.UpdateReviewByIDForPATCH)
+		router.DELETE("/delete-reviews/:id", controller.DeleteReviewByID)
+	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "API RUNNING... PORT: %s", PORT)
