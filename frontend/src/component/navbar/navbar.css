@@ -1,0 +1,95 @@
+.nav-root {
+  width: 100%;
+  min-width: 360px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 2vw;
+  background: #fff;
+  box-sizing: border-box;
+  justify-content: space-between;
+  font-family: 'Segoe UI', 'sans-serif';
+  box-shadow: none;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.36rem;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 1px;
+}
+.nav-logo img {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  margin-right: 2px;
+}
+.nav-menu {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.nav-menu li {
+  color: #767676;
+  cursor: pointer;
+  transition: color 0.14s;
+  letter-spacing: 0.7px;
+  font-family: inherit;
+}
+.nav-menu li:hover {
+  color: #161616;
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+.nav-cart-btn {
+  background: #f6f6f6;
+  border: none;
+  border-radius: 12px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.14s;
+}
+.nav-cart-btn:hover {
+  background: #ececec;
+}
+.nav-login-btn {
+  background: #1b1b1b;
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  padding: 0 19px;
+  height: 38px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  box-shadow: 0 2px 9px #bbb3;
+}
+.nav-login-btn:hover {
+  background: #000;
+}
+@media (max-width: 700px) {
+  .nav-menu {
+    gap: 14px;
+    font-size: 0.99rem;
+  }
+  .nav-logo span {
+    display: none;
+  }
+  .nav-root {
+    padding: 0 6px;
+  }
+}

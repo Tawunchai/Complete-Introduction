@@ -33,9 +33,8 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "API RUNNING... PORT: %s", PORT)
 	})
-
+	
 	r.Run("localhost:" + PORT)
-
 }
 
 func CORSMiddleware() gin.HandlerFunc {

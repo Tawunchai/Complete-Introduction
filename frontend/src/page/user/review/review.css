@@ -1,0 +1,133 @@
+.review-section {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 40px 10px 30px 10px;
+}
+.review-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.review-title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  letter-spacing: -1px;
+  color: #191919;
+  margin: 0;
+}
+.review-header-actions {
+  display: flex;
+  gap: 14px;
+}
+.review-viewall-btn {
+  background: #f59e42;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 11px;
+  padding: 8px 24px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: background 0.17s;
+}
+.review-viewall-btn:hover {
+  background: #d97706;
+}
+.review-add-btn {
+  background: #f5f5f5;
+  color: #222;
+  font-weight: 500;
+  border: 1.2px solid #ddd;
+  border-radius: 11px;
+  padding: 8px 20px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: background 0.16s, border 0.16s;
+}
+.review-add-btn:hover {
+  background: #fff;
+  border: 1.2px solid #bbb;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 28px;
+}
+.review-card {
+  background: #fff;
+  border-radius: 19px 19px 19px 46px/19px 19px 19px 46px;
+  border: 1.6px solid #ececec;
+  box-shadow: 0 2px 12px #dadada13;
+  padding: 24px 28px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 170px;
+  position: relative;
+}
+.review-stars {
+  margin-bottom: 8px;
+}
+.star-text {
+  letter-spacing: 1px;
+  font-size: 1.22rem;
+}
+.review-text {
+  color: #232323;
+  font-size: 1.08rem;
+  font-style: italic;
+  margin-bottom: 20px;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.review-author {
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  margin-top: auto;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+
+.review-paging-btn {
+  background: #f5f5f5;
+  border: 1.2px solid #e5e7eb;
+  color: #2563eb;
+  font-size: 1rem;
+  padding: 5px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.14s;
+}
+.review-paging-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.review-paging-btn:not([disabled]):hover {
+  background: #e0eaff;
+}
+
+@media (max-width: 800px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+  .review-card {
+    min-height: 120px;
+  }
+}
+@media (max-width: 550px) {
+  .review-title {
+    font-size: 1.38rem;
+  }
+  .review-header-row {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  .review-card {
+    padding: 18px 12px;
+    font-size: 1rem;
+  }
+}

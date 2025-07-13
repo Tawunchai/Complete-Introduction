@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { listReviews, deleteReview } from "../../service/index";
 import type { ReviewInterface } from "../../interface/IReview";
-import { Card, Row, Col, Avatar, Typography, Rate, message, Button, Tooltip } from "antd";
-import { UserOutlined, DeleteOutlined, PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Avatar,
+  Typography,
+  Rate,
+  Button,
+  Tooltip,
+  message,
+  Modal,
+} from "antd";
+import {
+  UserOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 import EditReviewModal from "./update/index";
 import CreateReviewModal from "./create/index";
+import "./review.css";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
+const { confirm } = Modal;
 
-const ReviewList: React.FC = () => {
+const ReviewTable: React.FC = () => {
   const [reviews, setReviews] = useState<ReviewInterface[]>([]);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewInterface | null>(null);
-  const [createOpen, setCreateOpen] = useState(false); // <-- state สำหรับ create modal
+  const [createOpen, setCreateOpen] = useState(false);
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line
   }, []);
 
   const fetchReviews = async () => {
@@ -23,125 +41,178 @@ const ReviewList: React.FC = () => {
     if (res) setReviews(res);
   };
 
-  const handleDelete = async (id: number | string) => {
-    const success = await deleteReview(id);
-    if (success) {
-      setReviews((prev) => prev.filter((r) => r.ID !== id));
-      message.success("ลบรีวิวสำเร็จ!");
-    } else {
-      message.error("เกิดข้อผิดพลาดในการลบรีวิว");
-    }
+  const handleDelete = (id: number | string) => {
+    confirm({
+      title: "ต้องการลบรีวิวนี้หรือไม่?",
+      icon: <ExclamationCircleOutlined />,
+      okText: "ลบ",
+      okType: "danger",
+      cancelText: "ยกเลิก",
+      onOk: async () => {
+        const success = await deleteReview(id);
+        if (success) {
+          setReviews((prev) => prev.filter((r) => r.ID !== id));
+          message.success("ลบรีวิวสำเร็จ!");
+        } else {
+          message.error("เกิดข้อผิดพลาดในการลบรีวิว");
+        }
+      },
+    });
   };
 
-  // Edit
-  const handleEdit = (review: ReviewInterface) => {
-    setSelectedReview(review);
-    setEditOpen(true);
-  };
-
-  const handleEditSuccess = () => {
-    setEditOpen(false);
-    setSelectedReview(null);
-    fetchReviews();
-  };
-
-  // Create
-  const handleCreateSuccess = () => {
-    setCreateOpen(false);
-    fetchReviews();
-  };
+  const columns = [
+    {
+      title: "",
+      dataIndex: ["User", "FirstName"],
+      key: "avatar",
+      width: 60,
+      align: "center" as const,
+      render: (_: any, record: ReviewInterface) => (
+        <Avatar
+          style={{
+            background: "#fff3e0",
+            color: "#ff9800",
+            fontWeight: 700,
+            border: "2px solid #ffdfb0",
+          }}
+          icon={!record.User?.FirstName && <UserOutlined />}
+        >
+          {record.User?.FirstName?.[0]?.toUpperCase()}
+        </Avatar>
+      ),
+    },
+    {
+      title: "ผู้ใช้",
+      key: "user",
+      width: 140,
+      render: (_: any, record: ReviewInterface) => (
+        <span className="user-col">
+          {record.User?.FirstName || "ไม่ระบุชื่อ"}
+          {record.User?.LastName && ` ${record.User.LastName}`}
+        </span>
+      ),
+    },
+    {
+      title: "วันที่",
+      dataIndex: "Date",
+      key: "date",
+      width: 120,
+      render: (date: string) =>
+        date ? (
+          <span className="date-col">
+            {new Date(date).toLocaleDateString("th-TH", {
+              year: "2-digit",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        ) : (
+          "-"
+        ),
+    },
+    {
+      title: "คะแนน",
+      dataIndex: "Rating",
+      key: "rating",
+      width: 110,
+      render: (rating: number) => (
+        <Rate disabled allowHalf value={rating || 0} style={{ color: "#ff9800", fontSize: 20 }} />
+      ),
+      sorter: (a: ReviewInterface, b: ReviewInterface) => (a.Rating ?? 0) - (b.Rating ?? 0),
+    },
+    {
+      title: "รีวิว",
+      dataIndex: "Comment",
+      key: "comment",
+      className: "comment-col",
+      render: (comment: string) => <span>{comment}</span>,
+    },
+    {
+      title: "",
+      key: "action",
+      width: 90,
+      align: "center" as const,
+      render: (_: any, record: ReviewInterface) => (
+        <>
+          <Tooltip title="แก้ไข">
+            <Button
+              icon={<EditOutlined />}
+              type="text"
+              onClick={() => {
+                setSelectedReview(record);
+                setEditOpen(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="ลบ">
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              type="text"
+              onClick={() => handleDelete(record.ID!)}
+            />
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
 
   return (
-    <div style={{ background: "#f0f4ff", minHeight: "100vh", padding: 28 }}>
-      <div style={{ maxWidth: 1080, margin: "auto", background: "#fff", borderRadius: 24, padding: "28px 10px" }}>
-        <Title level={2} style={{ textAlign: "center", color: "#2563eb", marginBottom: 32 }}>
-          รีวิวจากผู้ใช้
+    <div className="review-bg">
+      <div className="review-table-glass">
+        <Title level={3} className="review-title-2">
+          Admin Dashboard Reviews
         </Title>
-        <div style={{ textAlign: "right", marginBottom: 24 }}>
+        <div style={{ textAlign: "right", marginBottom: 18 }}>
           <Button
             type="primary"
             icon={<PlusCircleOutlined />}
+            style={{
+              background: "#ff9800",
+              borderColor: "#ff9800",
+              borderRadius: 11,
+              fontWeight: 700,
+              letterSpacing: 0.2,
+              fontSize: "1.04rem",
+            }}
             onClick={() => setCreateOpen(true)}
-            style={{ borderRadius: 12 }}
           >
-            Create
+            สร้างรีวิว
           </Button>
         </div>
-        <Row gutter={[16, 16]}>
-          {reviews.map((review) => (
-            <Col xs={24} sm={12} md={8} key={review.ID}>
-              <Card style={{ borderRadius: 16, position: "relative", paddingRight: 60 }}>
-                <DeleteOutlined
-                  onClick={() => handleDelete(review.ID!)}
-                  style={{
-                    position: "absolute",
-                    top: 14,
-                    right: 18,
-                    color: "#e11d48",
-                    fontSize: 20,
-                    cursor: "pointer",
-                    zIndex: 2,
-                  }}
-                  title="ลบรีวิว"
-                />
-                <Tooltip title="แก้ไขรีวิว">
-                  <EditOutlined
-                    onClick={() => handleEdit(review)}
-                    style={{
-                      position: "absolute",
-                      top: 14,
-                      right: 46,
-                      color: "#f59e42",
-                      fontSize: 20,
-                      cursor: "pointer",
-                      zIndex: 2,
-                    }}
-                  />
-                </Tooltip>
-                <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
-                  <Avatar
-                    size={44}
-                    style={{ background: "#b4cafe", color: "#1956d1", fontWeight: 700, marginRight: 12 }}
-                    icon={!review.User?.FirstName && <UserOutlined />}
-                  >
-                    {review.User?.FirstName?.[0]?.toUpperCase()}
-                  </Avatar>
-                  <div>
-                    <Text strong style={{ fontSize: 16, color: "#222b4e" }}>
-                      {review.User?.FirstName || "ไม่ระบุชื่อ"}
-                      {review.User?.LastName && ` ${review.User.LastName}`}
-                    </Text>
-                    <div style={{ fontSize: 13, color: "#64748b" }}>
-                      {review.Date && new Date(review.Date).toLocaleDateString("th-TH", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </div>
-                  </div>
-                </div>
-                <Rate disabled value={review.Rating || 0} style={{ fontSize: 18, marginBottom: 6 }} />
-                <div style={{ color: "#475569", fontSize: 15 }}>{review.Comment}</div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+        <Table
+          columns={columns}
+          dataSource={reviews}
+          rowKey="ID"
+          pagination={{ pageSize: 5, showSizeChanger: false }}
+          bordered={false}
+          size="middle"
+          className="review-ant-table"
+          style={{ width: "100%" }}
+        />
       </div>
       {/* Edit Modal */}
       <EditReviewModal
         open={editOpen}
         onClose={() => setEditOpen(false)}
         review={selectedReview}
-        onSuccess={handleEditSuccess}
+        onSuccess={() => {
+          setEditOpen(false);
+          setSelectedReview(null);
+          fetchReviews();
+        }}
       />
       {/* Create Modal */}
       <CreateReviewModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        onSuccess={handleCreateSuccess}
+        onSuccess={() => {
+          setCreateOpen(false);
+          fetchReviews();
+        }}
       />
     </div>
   );
 };
 
-export default ReviewList;
+export default ReviewTable;
