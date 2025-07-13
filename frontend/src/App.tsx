@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Review from "./page/review/index"
+import Review from "./page/admin/dashboard/index"
 import Home from "./page/user/product"
 import Navbar from "./component/navbar"
 

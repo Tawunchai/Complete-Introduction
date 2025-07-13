@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { listReviews, deleteReview } from "../../service/index";
-import type { ReviewInterface } from "../../interface/IReview";
+import { listReviews, deleteReview } from "../../../service/index";
+import type { ReviewInterface } from "../../../interface/IReview";
 import {
   Table,
   Avatar,

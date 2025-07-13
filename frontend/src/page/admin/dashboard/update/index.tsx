@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Form, Input, Rate, Button, message } from "antd";
-import { updateReview } from "../../../service/index";
-import type { ReviewInterface } from "../../../interface/IReview";
+import { updateReview } from "../../../../service/index";
+import type { ReviewInterface } from "../../../../interface/IReview";
 
 const { TextArea } = Input;
 
